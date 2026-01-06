@@ -1,0 +1,3 @@
+#cloud-config
+runcmd:
+- EVE_CONTAINER_NO_POWEROFF=1

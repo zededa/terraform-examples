@@ -1,0 +1,20 @@
+#cloud-config
+
+hostname: WIN2025-EVE
+
+runcmd:
+  # Set Administrator password (correct Windows method)
+  - powershell -ExecutionPolicy Bypass -Command "net user Administrator 'P@ssword123'"
+
+  # Ensure Administrator enabled
+  - powershell -ExecutionPolicy Bypass -Command "Enable-LocalUser -Name Administrator"
+
+  # Disable password expiration (WMIC-free)
+  - powershell -ExecutionPolicy Bypass -Command "Set-LocalUser -Name Administrator -PasswordNeverExpires $true"
+
+  # Enable RDP
+  - powershell -ExecutionPolicy Bypass -Command "Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0"
+  - powershell -ExecutionPolicy Bypass -Command "Enable-NetFirewallRule -DisplayGroup 'Remote Desktop'"
+
+  # Marker file
+  - powershell -ExecutionPolicy Bypass -Command "New-Item -Path C:\cloudbase-init-ran.txt -ItemType File -Force"
